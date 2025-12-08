@@ -1,0 +1,163 @@
+name: Security Scan with VPS Publishing
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    - cron: '0 2 * * *'  # Tous les jours à 2h du matin
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'
+    
+    - name: Install dependencies
+      run: |
+        pip install bandit safety semgrep requests
+    
+    - name: Run Bandit
+      run: |
+        bandit -r . -f json -o bandit_report.json || true
+    
+    - name: Run Safety
+      run: |
+        safety check --json > safety_report.json || true
+    
+    - name: Run Semgrep
+      run: |
+        semgrep --config=auto --json -o semgrep_report.json . || true
+    
+    - name: Aggregate results
+      run: |
+        python3 << 'EOF'
+        import json
+        import os
+        from datetime import datetime
+        
+        results = {
+            'scan_date': datetime.now().isoformat(),
+            'repository': os.environ.get('GITHUB_REPOSITORY', 'unknown'),
+            'bandit': {},
+            'safety': {},
+            'semgrep': {}
+        }
+        
+        # Charger Bandit
+        try:
+            with open('bandit_report.json', 'r') as f:
+                results['bandit'] = json.load(f)
+        except: pass
+        
+        # Charger Safety
+        try:
+            with open('safety_report.json', 'r') as f:
+                results['safety'] = json.load(f)
+        except: pass
+        
+        # Charger Semgrep
+        try:
+            with open('semgrep_report.json', 'r') as f:
+                results['semgrep'] = json.load(f)
+        except: pass
+        
+        # Sauvegarder
+        with open('security_report.json', 'w') as f:
+            json.dump(results, f, indent=2)
+        
+        print("✅ Rapport agrégé créé")
+        EOF
+    
+    - name: Upload to VPS
+      env:
+        VPS_URL: ${{ secrets.VPS_URL }}
+        VPS_SECRET_KEY: ${{ secrets.VPS_SECRET_KEY }}
+        RESULTS_FILE: security_report.json
+      run: |
+        # Télécharger le script publish_to_vps.py si nécessaire
+        # ou l'inclure dans le repo
+        
+        pip install requests
+        
+        python3 << 'EOF'
+        import requests
+        import json
+        import os
+        import sys
+        import hmac
+        import hashlib
+        from datetime import datetime
+        
+        VPS_URL = os.environ.get('VPS_URL')
+        VPS_SECRET = os.environ.get('VPS_SECRET_KEY', '')
+        RESULTS_FILE = 'security_report.json'
+        
+        if not VPS_URL:
+            print("⚠️  VPS_URL non configuré, saut de l'envoi")
+            sys.exit(0)
+        
+        def generate_signature(payload):
+            if not VPS_SECRET:
+                return ''
+            return hmac.new(
+                VPS_SECRET.encode(),
+                payload.encode(),
+                hashlib.sha256
+            ).hexdigest()
+        
+        # Charger les résultats
+        with open(RESULTS_FILE, 'r') as f:
+            results = json.load(f)
+        
+        # Enrichir
+        data = {
+            'timestamp': datetime.now().isoformat(),
+            'repository': os.environ.get('GITHUB_REPOSITORY', 'unknown'),
+            'workflow': os.environ.get('GITHUB_WORKFLOW', 'unknown'),
+            'run_id': os.environ.get('GITHUB_RUN_ID', 'unknown'),
+            'run_number': os.environ.get('GITHUB_RUN_NUMBER', 'unknown'),
+            'ref': os.environ.get('GITHUB_REF', 'unknown'),
+            'sha': os.environ.get('GITHUB_SHA', 'unknown'),
+            'actor': os.environ.get('GITHUB_ACTOR', 'unknown'),
+            'results': results
+        }
+        
+        # Envoyer
+        endpoint = f"{VPS_URL}/api/results"
+        payload = json.dumps(data)
+        signature = generate_signature(payload)
+        
+        headers = {
+            'Content-Type': 'application/json',
+            'X-Signature': signature
+        }
+        
+        try:
+            response = requests.post(endpoint, data=payload, headers=headers, timeout=30)
+            response.raise_for_status()
+            print("✅ Résultats envoyés au VPS avec succès!")
+            print(response.json())
+        except Exception as e:
+            print(f"❌ Erreur d'envoi: {e}")
+            sys.exit(1)
+        EOF
+    
+    - name: Upload artifacts (backup)
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: |
+          bandit_report.json
+          safety_report.json
+          semgrep_report.json
+          security_report.json
