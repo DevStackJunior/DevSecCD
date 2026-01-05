@@ -1,0 +1,49 @@
+project: owasp-dependency-check
+repo: https://github.com/jeremylong/DependencyCheck.git
+ref: null
+source_path: SECURITY.md
+commit: 58b4ddccbdafcb7347979c6551c4f56049126dcc
+fetched_at_utc: '2026-01-05T13:08:41.076492+00:00'
+raw_sha256: a802ae153aa7c21f641ea013dd2893ea0d889e13894d85d81b2462de8fbde238
+extracted:
+  emails: []
+  urls:
+  - https://github.com/jeremylong/DependencyCheck/issues/new/choose
+  signals:
+    safe_harbor_mentioned: false
+    disclosure_process_mentioned: false
+    sla_or_timeline_mentioned: true
+    scope_mentioned: false
+sections:
+  contact: []
+  reporting:
+  - title: Reporting a Vulnerability
+    content: 'If a security vulnerability is identified in dependency-check please
+
+      open an [issue](https://github.com/jeremylong/DependencyCheck/issues/new/choose)
+
+      and/or submit a PR to resolve the identified vulnerability.
+
+
+      The team is very responsive to reported vulnerabilities - historically having
+      reported issues resolved in 30 days or less.
+
+
+      Note - there are several vulnerable test dependencies and test resources. These
+      are never executed or included in a release; these vulnerable resources are
+      present so that the functionality of dependency-check can be tested (i.e. it
+      correctly identifies the given vulnerable test dependency).'
+  scope: []
+  disclosure_policy:
+  - title: Security Policy
+    content: ''
+  sla: []
+  other:
+  - title: Supported Versions
+    content: '| Version   | Supported          |
+
+      | ----------|--------------------|
+
+      | 10.0.2+   | :white_check_mark: |
+
+      | <= 10.0.1 | :x:                |'
