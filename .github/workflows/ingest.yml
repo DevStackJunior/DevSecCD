@@ -3,12 +3,16 @@ name: Ingest security statements
 on:
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   ingest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          persist-credentials: true
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
@@ -17,6 +21,7 @@ jobs:
         run: ./scripts/run_ingest.sh
 
       - name: Commit changes (if any)
+        if: github.event_name != 'pull_request'
         run: |
           git config user.name "github-actions"
           git config user.email "github-actions@users.noreply.github.com"
