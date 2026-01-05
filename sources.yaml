@@ -1,0 +1,10 @@
+sources:
+  - name: owasp-top10
+    repo: https://github.com/OWASP/Top10.git
+    statement_paths:
+      - SECURITY.md
+      - docs/security.md
+  - name: owasp-dependency-check
+    repo: https://github.com/jeremylong/DependencyCheck.git
+    statement_paths:
+      - SECURITY.md

@@ -1,0 +1,55 @@
+name: Security Pipeline (Scan + OWASP Ingest)
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '0 2 * * *' # Tous les jours à 02:00 UTC
+
+jobs:
+  security-pipeline:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Run centralized security scan
+        run: |
+          chmod +x scripts/run_security_scan.sh
+          ./scripts/run_security_scan.sh
+
+      - name: Run centralized OWASP ingest
+        run: |
+          chmod +x scripts/run_owasp_ingest.sh
+          ./scripts/run_owasp_ingest.sh
+
+      # Optionnel: commit automatique de l’ingest sur main/develop (pas sur PR)
+      - name: Commit OWASP ingest changes (if any)
+        if: github.event_name != 'pull_request'
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@users.noreply.github.com"
+          git add statements analysis
+          git diff --cached --quiet || git commit -m "Automated OWASP ingest update"
+          git push
+
+      - name: Upload artifacts (backup)
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-artifacts
+          path: |
+            bandit_report.json
+            safety_report.json
+            semgrep_report.json
+            security_report.json
+            statements/**
+            analysis/**
