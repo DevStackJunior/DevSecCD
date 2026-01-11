@@ -3,7 +3,7 @@ repo: https://github.com/jeremylong/DependencyCheck.git
 ref: null
 source_path: SECURITY.md
 commit: 58b4ddccbdafcb7347979c6551c4f56049126dcc
-fetched_at_utc: '2026-01-10T03:20:48.671011+00:00'
+fetched_at_utc: '2026-01-11T03:45:48.049630+00:00'
 raw_sha256: a802ae153aa7c21f641ea013dd2893ea0d889e13894d85d81b2462de8fbde238
 extracted:
   emails: []
