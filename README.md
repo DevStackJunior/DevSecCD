@@ -4,6 +4,7 @@ Ce projet implémente une infrastructure de **surveillance continue** pour sécu
 
 ## 📋 Vision Stratégique
 Dans un environnement de développement moderne, ce pipeline garantit que la rapidité ne compromet jamais l'intégrité des données. Il agit comme un **audit permanent**, assurant que chaque modification de code répond aux exigences de cybersécurité avant même d'être déployée.
+<img width="889" height="499" alt="image" src="https://github.com/user-attachments/assets/c38c86ac-fbc4-458c-a058-5a461cf0de8a" />
 
 ---
 
