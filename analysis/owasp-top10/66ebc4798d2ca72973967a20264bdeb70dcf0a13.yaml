@@ -1,0 +1,103 @@
+project: owasp-top10
+repo: https://github.com/OWASP/Top10.git
+ref: null
+source_path: SECURITY.md
+commit: 66ebc4798d2ca72973967a20264bdeb70dcf0a13
+fetched_at_utc: '2026-08-06T05:11:28.492205+00:00'
+raw_sha256: 489c863ff16995cdb8a99d6b7b0103eeb50387e8c77bfdcf68d263441c009022
+extracted:
+  emails: []
+  urls: []
+  signals:
+    safe_harbor_mentioned: false
+    disclosure_process_mentioned: true
+    sla_or_timeline_mentioned: false
+    scope_mentioned: false
+sections:
+  contact: []
+  reporting:
+  - title: Reporting a Vulnerability
+    content: 'This repository does **not** directly process user data, authentication,
+      or runtime execution.
+
+      However, if you believe you have identified:
+
+
+      - A security issue affecting linked tooling or referenced examples
+
+      - A misconfiguration that could lead to unsafe usage patterns
+
+      - A vulnerability related to CI/CD workflows or repository automation
+
+
+      Please follow **responsible disclosure** practices.'
+  - title: How to Report
+    content: '- Open a **private GitHub Security Advisory** for this repository, **or**
+
+      - Contact the OWASP project maintainers through official OWASP communication
+      channels
+
+
+      Please include:
+
+      - A clear description of the issue
+
+      - Steps to reproduce (if applicable)
+
+      - Potential impact
+
+      - Suggested remediation (if available)
+
+
+      ---'
+  scope: []
+  disclosure_policy:
+  - title: Security Policy
+    content: ''
+  - title: Disclosure Process
+    content: '- Reports will be reviewed by project maintainers
+
+      - If applicable, fixes will be discussed and implemented
+
+      - Public disclosure may occur after remediation, with reporter credit if desired
+
+
+      ---'
+  sla: []
+  other:
+  - title: Supported Versions
+    content: 'This repository contains documentation and educational content.
+
+      There are no executable components or deployed services associated with this
+      project.
+
+
+      The `master` branch reflects the latest maintained version of the documentation.
+
+
+      | Version | Supported |
+
+      |--------|-----------|
+
+      | master | ✅ |
+
+      | Others | ❌ |
+
+
+      ---'
+  - title: Security Best Practices for Contributors
+    content: '- Do not include secrets, tokens, or credentials in documentation or
+      workflows
+
+      - Avoid using user-controlled input in CI/CD pipelines without validation
+
+      - Follow the OWASP Cheat Sheet Series for secure development and governance
+      practices
+
+
+      ---'
+  - title: Recognition
+    content: 'Security researchers and contributors who responsibly disclose issues
+      may be acknowledged
+
+      in release notes or project documentation, unless anonymity is requested.'
