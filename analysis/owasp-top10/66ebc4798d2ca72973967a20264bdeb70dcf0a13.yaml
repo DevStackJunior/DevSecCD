@@ -3,7 +3,7 @@ repo: https://github.com/OWASP/Top10.git
 ref: null
 source_path: SECURITY.md
 commit: 66ebc4798d2ca72973967a20264bdeb70dcf0a13
-fetched_at_utc: '2026-08-06T05:11:28.492205+00:00'
+fetched_at_utc: '2026-08-07T04:21:34.826218+00:00'
 raw_sha256: 489c863ff16995cdb8a99d6b7b0103eeb50387e8c77bfdcf68d263441c009022
 extracted:
   emails: []
